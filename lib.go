@@ -33,7 +33,7 @@ func remove_comments(s string) string {
 	return s
 }
 
-func only_payload(v []string) []string {
+func only_payLoad(v []string) []string {
 	var ret []string
 	for _, e := range v {
 		if e != "" {
@@ -47,7 +47,7 @@ func generate_color_fragment(color Color, count int) string {
 	ret := ""
 	var i int = 0
 	for ; i < count; i++ {
-		ret += color.to_string()
+		ret += color.ToString()
 	}
 	return ret
 }
@@ -76,7 +76,7 @@ type Header struct {
 	author string
 }
 
-func (header Header) to_string() string {
+func (header Header) ToString() string {
 	ret := ""
 	ret += "width "
 	ret += strconv.Itoa(int(header.width))
@@ -96,12 +96,12 @@ func (header Header) to_string() string {
 	}
 	if header.color_mod != DEFAULT_COLORS {
 		ret += "\ncolors "
-		ret += header.color_mod.to_string()
+		ret += header.color_mod.ToString()
 	}
 	if header.utf8 {
 		ret += "\nutf8"
 	}
-	if header.color_mod.to_datacols() != header.datacols {
+	if header.color_mod.ToDatacols() != header.datacols {
 		ret += "\ndatacols "
 		ret += strconv.Itoa(int(header.datacols))
 	}
@@ -125,7 +125,7 @@ func (header Header) to_string() string {
 	return ret
 }
 
-func header_from_string(s string) (*Header, error) {
+func HeaderFromString(s string) (*Header, error) {
 	var (
 		width uint16 = 0
 		width_set bool = false
@@ -145,7 +145,7 @@ func header_from_string(s string) (*Header, error) {
 	rows := strings.Split(s, "\n")
 	for _, row := range rows {
 		tokens := strings.Split(row, " ")
-		tokens = only_payload(tokens)
+		tokens = only_payLoad(tokens)
 		if tokens[0] == "utf8" {
 			utf8 = true
 		}else{
@@ -181,7 +181,7 @@ func header_from_string(s string) (*Header, error) {
 					}
 				}
 				case "colors": {
-					var cm, err = color_mod_from_string(tokens[1])
+					var cm, err = ColorModFromString(tokens[1])
 					if err == nil {
 						color_mod = cm
 					}
@@ -242,7 +242,7 @@ func header_from_string(s string) (*Header, error) {
 		return nil, InvalidHeight{}
 	}
 	if !datacols_set {
-		datacols = color_mod.to_datacols()
+		datacols = color_mod.ToDatacols()
 	}
 	ret := new(Header)
 	*ret = Header{width, height, delay, loop_enable, color_mod, utf8, datacols, preview, audio, title, author}
@@ -251,7 +251,7 @@ func header_from_string(s string) (*Header, error) {
 
 type Body []Frame
 
-func (frames Body) to_string(pretify bool) string {
+func (frames Body) ToString(pretify bool) string {
 	ret := ""
 	for frm, frame := range frames {
 		for _, row := range frame{
@@ -277,7 +277,7 @@ func (frames Body) to_string(pretify bool) string {
 	return ret
 }
 
-func body_from_string(s string, h Header) (Body, error) {
+func BodyFromString(s string, h Header) (Body, error) {
 	r := regexp.MustCompile("(\n|\t)")
 	s = r.ReplaceAllString(s, "")
 	char_vec := []rune(s)
@@ -377,18 +377,18 @@ type Art struct {
 	body Body
 }
 
-func load(s string) (*Art, error) {
+func Load(s string) (*Art, error) {
 	fragments := strings.SplitN(s, "\n\n", 2)
 	if len(fragments) < 2 {
 		return nil, ThereIsNoBody{}
 	}
 	header_string := fragments[0]
 	body_string := fragments[1]
-	header, h_err := header_from_string(header_string)
+	header, h_err := HeaderFromString(header_string)
 	if h_err != nil {
 		return nil, h_err
 	}
-	body, b_err := body_from_string(body_string, *header)
+	body, b_err := BodyFromString(body_string, *header)
 	if b_err != nil {
 		return nil, b_err
 	}
@@ -397,15 +397,15 @@ func load(s string) (*Art, error) {
 	return ret, nil
 }
 
-func save(art Art, pretify bool) string {
+func Save(art Art, pretify bool) string {
 	ret := ""
-	ret += art.header.to_string()
+	ret += art.header.ToString()
 	ret += "\n"
-	ret += art.body.to_string(pretify)
+	ret += art.body.ToString(pretify)
 	return ret
 }
 
-func load_file(path string) (*Art, error) {
+func LoadFile(path string) (*Art, error) {
 	file, err := os.Open("hello.txt")
 	if err != nil {
 		return nil, err
@@ -414,15 +414,15 @@ func load_file(path string) (*Art, error) {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(file)
 	text := buf.String()
-	return load(text)
+	return Load(text)
 }
 
-func save_file(art Art, pretify bool, path string) error {
+func SaveFile(art Art, pretify bool, path string) error {
 	file, err := os.OpenFile(path, os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	file.Write([]byte(save(art, pretify)))
+	file.Write([]byte(Save(art, pretify)))
 	return nil
 }

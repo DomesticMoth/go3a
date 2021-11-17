@@ -145,8 +145,8 @@ func TestBodyToText(t *testing.T) {
 		},
 	}
 	text_reference := "AAAAaabb1122\nBBBBaabc1122\nCCCCaaaa1111\nDDDDabcd1111\n\nAAAAaabb1122\nBBBBaabc1122\nCCCCaaaa1111\nDDDDabcd1111\n"
-    if text_reference != body.to_string(true) {
-    	t.Errorf("Body to text convertion incorrect \n%s--\n%s--", text_reference, body.to_string(true))
+    if text_reference != body.ToString(true) {
+    	t.Errorf("Body to text convertion incorrect \n%s--\n%s--", text_reference, body.ToString(true))
     }
 }
 
@@ -287,11 +287,11 @@ func TestBodyFromTextCorrectFullcolor(t *testing.T) {
 		},
 	}
 	text := "AAAAaabb1122\nBBBBaabc1122\nCCCCaaaa1111\nDDDDabcd1111\n\nAAAAaabb1122\nBBBBaabc1122\nCCCCaaaa1111\nDDDDabcd1111\n"
-	result, err := body_from_string(text, header)
+	result, err := BodyFromString(text, header)
 	if err != nil {
 		t.Errorf("Error while parcing body %d", err)
 	}
-	if body.to_string(true) != result.to_string(true) {
-		t.Errorf("Body from text convertion incorrect \n%s--\n%s--", body.to_string(true), result.to_string(true))
+	if body.ToString(true) != result.ToString(true) {
+		t.Errorf("Body from text convertion incorrect \n%s--\n%s--", body.ToString(true), result.ToString(true))
 	}
 }

@@ -24,12 +24,12 @@ import (
 func TestColorMod(t *testing.T) {
 	var mods []string = []string{"none", "fg", "bg", "full"}
 	for _, mod := range mods {
-		var color_mod, err = color_mod_from_string(mod)
+		var color_mod, err = ColorModFromString(mod)
 		if err != nil {
 			t.Errorf("ColorMod parcing error str: %s  err: %d", mod, err)
 		}
-		if color_mod.to_string() != mod {
-			t.Errorf("ColorMod parcing error str: %s ColorMod: %s ", mod, color_mod.to_string())
+		if color_mod.ToString() != mod {
+			t.Errorf("ColorMod parcing error str: %s ColorMod: %s ", mod, color_mod.ToString())
 		}
 	}
 }
@@ -41,8 +41,8 @@ func TestColo(t *testing.T) {
 		if err != nil {
 			t.Errorf("Color parcing error str: %s  err: %d", clr, err)
 		}
-		if color.to_string() != clr {
-			t.Errorf("Color parcing error str: %s Colo: %s ", clr, color.to_string())
+		if color.ToString() != clr {
+			t.Errorf("Color parcing error str: %s Colo: %s ", clr, color.ToString())
 		}
 	}
 }

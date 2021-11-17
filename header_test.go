@@ -37,8 +37,8 @@ func TestHeaderToStringAllParams(t *testing.T) {
         "",
     }
     s_ref := "width 1\nheight 2\ndelay 51\nloop false\ncolors full\nutf8\ndatacols 123\npreview 1\naudio 1234567\n\n"
-    if s_ref != header.to_string() {
-    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.to_string())
+    if s_ref != header.ToString() {
+    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.ToString())
     }
 }
 
@@ -50,15 +50,15 @@ func TestHeaderToStringDefaultParams(t *testing.T) {
         DEFAULT_LOOP,
         DEFAULT_COLORS,
         DEFAULT_UTF8,
-        DEFAULT_COLORS.to_datacols(),
+        DEFAULT_COLORS.ToDatacols(),
         DEFAULT_PREVIEW,
         "",
         "",
         "",
     }
     s_ref := "width 1\nheight 2\n\n"
-    if s_ref != header.to_string() {
-    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.to_string())
+    if s_ref != header.ToString() {
+    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.ToString())
     }
 }
 
@@ -70,15 +70,15 @@ func TestHeaderToStringDatacols(t *testing.T) {
         DEFAULT_LOOP,
         DEFAULT_COLORS,
         DEFAULT_UTF8,
-        DEFAULT_COLORS.to_datacols()+1,
+        DEFAULT_COLORS.ToDatacols()+1,
         DEFAULT_PREVIEW,
         "",
         "",
         "",
     }
     s_ref := "width 1\nheight 2\ndatacols 2\n\n"
-    if s_ref != header.to_string() {
-    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.to_string())
+    if s_ref != header.ToString() {
+    	t.Errorf("Header to text convertion incorrect \n%s--\n%s--", s_ref, header.ToString())
     }
 }
 
@@ -97,13 +97,13 @@ func TestHeaderFromStringFull(t *testing.T) {
         "",
         "",
     }
-    h, err := header_from_string(s)
+    h, err := HeaderFromString(s)
     if err != nil {
     	t.Errorf("Error while parcing header: %d", err)
     	return
     }
     if *h != refernce {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.ToString())
     }
 }
 
@@ -122,13 +122,13 @@ func TestHeaderFromStringOnlyRequired(t *testing.T) {
         "",
         "",
     }
-    h, err := header_from_string(s)
+    h, err := HeaderFromString(s)
     if err != nil {
     	t.Errorf("Error while parcing header: %d", err)
     	return
     }
     if *h != refernce {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.ToString())
     }
 }
 
@@ -147,21 +147,21 @@ func TestHeaderFromStringOptionalIncorrect(t *testing.T) {
         "",
         "",
     }
-    h, err := header_from_string(s)
+    h, err := HeaderFromString(s)
     if err != nil {
     	t.Errorf("Error while parcing header: %d", err)
     	return
     }
     if *h != refernce {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.ToString())
     }
 }
 
 func TestHeadeFromStringWidthIncorrect(t *testing.T) {
 	s := "width sdfsfsdf\nheight 2\ndelay 3\nloop false\ncolors full\nutf8\ndatacols 5\naudio 12345"
-	h, err := header_from_string(s)
+	h, err := HeaderFromString(s)
 	if err == nil {
-		t.Errorf("Header from text must return error but: \n%s", h.to_string())
+		t.Errorf("Header from text must return error but: \n%s", h.ToString())
 	}
 }
 
@@ -180,13 +180,13 @@ func TestHeaderFromStringDatacols(t *testing.T) {
         "",
         "",
     }
-    h, err := header_from_string(s)
+    h, err := HeaderFromString(s)
     if err != nil {
     	t.Errorf("Error while parcing header: %d", err)
     	return
     }
     if *h != refernce {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.ToString())
     }
     s1 := "width 1\nheight 2\ncolors full\ndatacols 0"
     refernce1 := Header{
@@ -202,13 +202,13 @@ func TestHeaderFromStringDatacols(t *testing.T) {
         "",
         "",
     }
-    h1, err1 := header_from_string(s1)
+    h1, err1 := HeaderFromString(s1)
     if err1 != nil {
     	t.Errorf("Error while parcing header: %d", err1)
     	return
     }
     if *h1 != refernce1 {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s1, h1.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s1, h1.ToString())
     }
 }
 
@@ -227,12 +227,12 @@ func TestHeaderFromStringExtraSpaces(t *testing.T) {
         "",
         "",
     }
-    h, err := header_from_string(s)
+    h, err := HeaderFromString(s)
     if err != nil {
     	t.Errorf("Error while parcing header: %d", err)
     	return
     }
     if *h != refernce {
-    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.to_string())
+    	t.Errorf("Header from text convertion incorrect \n%s--\n%s--", s, h.ToString())
     }
 }

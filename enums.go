@@ -26,7 +26,7 @@ const (
 	ColorModFull
 )
 
-func (cm ColorMod) to_datacols() uint16 {
+func (cm ColorMod) ToDatacols() uint16 {
 	switch cm {
 		case ColorModNone:
 			return 1
@@ -40,7 +40,7 @@ func (cm ColorMod) to_datacols() uint16 {
 	return 1
 }
 
-func (cm ColorMod) to_string() string {
+func (cm ColorMod) ToString() string {
 	switch cm {
 		case ColorModNone:
 			return "none"
@@ -54,7 +54,7 @@ func (cm ColorMod) to_string() string {
 	return "none"
 }
 
-func color_mod_from_string(s string) (ColorMod, error) {
+func ColorModFromString(s string) (ColorMod, error) {
 	switch s {
 		case "none":
 			return ColorModNone, nil
@@ -90,7 +90,7 @@ const (
 	NoColor
 )
 
-func (c Color) to_string() string {
+func (c Color) ToString() string {
 	switch c {
 		case ColorBlack:
 			return "0"

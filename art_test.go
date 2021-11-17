@@ -24,14 +24,14 @@ import (
 
 func TestSaveLoad(t *testing.T) {
 	text := "width 12\nheight 5\ndelay 300\ncolors fg\ntitle just an apple\nauthor DomesticMoth\n\n\n  ,--./,-.  444444444444\n / //     \\ 444cc4444444\n|          |444444444444\n \\        / 444444444444\n  '._,._,'  444444444444\n\n  ,--./,-.  444444444444\n / //    _\\ 444cc4444444\n|       /   4444444ffff4\n \\      `-, 4444444ffff4\n  '._,._,'  444444444444\n\n  ,--./,-.  444444444444\n / //   ,-' 444cc4444444\n|      (    4444444f4444\n \\      `-, 4444444ffff4\n  '._,._,'  444444444444\n"
-	art, err := load(text)
+	art, err := Load(text)
 	if err != nil {
-		t.Errorf("Error while loading art %d", err)
+		t.Errorf("Error while Loading art %d", err)
 		return
 	}
-	text2 := save(*art, true)
+	text2 := Save(*art, true)
 	if text != text2 {
-		t.Errorf("Art load/save incorrect \n%s--\n%s--", text, text2)
+		t.Errorf("Art Load/Save incorrect \n%s--\n%s--", text, text2)
 	}
 }
 
