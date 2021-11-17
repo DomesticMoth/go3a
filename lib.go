@@ -53,9 +53,9 @@ func generate_color_fragment(color Color, count int) string {
 }
 
 type RowFragment struct {
-    text string
-    fg_color Color
-    bg_color Color
+    Text string
+    FgColor Color
+    BgColor Color
 }
 
 type Row []RowFragment
@@ -63,63 +63,63 @@ type Row []RowFragment
 type Frame []Row
 
 type Header struct {
-	width uint16
-	height uint16
-	delay uint16
-	loop_enable bool
-	color_mod ColorMod
-	utf8 bool
-	datacols uint16
-	preview uint16
-	audio string
-	title string
-	author string
+	Width uint16
+	Height uint16
+	Delay uint16
+	LoopEnable bool
+	ColorMod ColorMod
+	Utf8 bool
+	Datacols uint16
+	Preview uint16
+	Audio string
+	Title string
+	Author string
 }
 
 func (header Header) ToString() string {
 	ret := ""
 	ret += "width "
-	ret += strconv.Itoa(int(header.width))
+	ret += strconv.Itoa(int(header.Width))
 	ret += "\nheight "
-	ret += strconv.Itoa(int(header.height))
-	if header.delay != DEFAULT_DELAY {
+	ret += strconv.Itoa(int(header.Height))
+	if header.Delay != DEFAULT_DELAY {
 		ret += "\ndelay "
-		ret += strconv.Itoa(int(header.delay))
+		ret += strconv.Itoa(int(header.Delay))
 	}
-	if header.loop_enable != DEFAULT_LOOP {
+	if header.LoopEnable != DEFAULT_LOOP {
 		ret += "\nloop "
-		if header.loop_enable {
+		if header.LoopEnable {
 			 ret += "true"
 		}else{
 			ret += "false"
 		}
 	}
-	if header.color_mod != DEFAULT_COLORS {
+	if header.ColorMod != DEFAULT_COLORS {
 		ret += "\ncolors "
-		ret += header.color_mod.ToString()
+		ret += header.ColorMod.ToString()
 	}
-	if header.utf8 {
+	if header.Utf8 {
 		ret += "\nutf8"
 	}
-	if header.color_mod.ToDatacols() != header.datacols {
+	if header.ColorMod.ToDatacols() != header.Datacols {
 		ret += "\ndatacols "
-		ret += strconv.Itoa(int(header.datacols))
+		ret += strconv.Itoa(int(header.Datacols))
 	}
-	if header.preview != DEFAULT_PREVIEW {
+	if header.Preview != DEFAULT_PREVIEW {
 		ret += "\npreview "
-		ret += strconv.Itoa(int(header.preview))
+		ret += strconv.Itoa(int(header.Preview))
 	}
-	if header.audio != "" {
+	if header.Audio != "" {
 		ret += "\naudio "
-		ret += header.audio
+		ret += header.Audio
 	}
-	if header.title != "" {
+	if header.Title != "" {
 		ret += "\ntitle "
-		ret += header.title
+		ret += header.Title
 	}
-	if header.author != "" {
+	if header.Author != "" {
 		ret += "\nauthor "
-		ret += header.author
+		ret += header.Author
 	}
 	ret += "\n\n"
 	return ret
@@ -259,9 +259,9 @@ func (frames Body) ToString(pretify bool) string {
 			color1_col := ""
 			color2_col := ""
 			for _, fragment := range row {
-				text_col += fragment.text
-				color1_col += generate_color_fragment(fragment.fg_color, len(fragment.text))
-				color2_col += generate_color_fragment(fragment.bg_color, len(fragment.text))
+				text_col += fragment.Text
+				color1_col += generate_color_fragment(fragment.FgColor, len(fragment.Text))
+				color2_col += generate_color_fragment(fragment.BgColor, len(fragment.Text))
 			}
 			ret += text_col
 			ret += color1_col
@@ -283,9 +283,9 @@ func BodyFromString(s string, h Header) (Body, error) {
 	char_vec := []rune(s)
 	length := uint16(len(char_vec))
 	var frm uint16 = 0
-	width := h.width
-	height := h.height
-	datacols := h.datacols
+	width := h.Width
+	height := h.Height
+	datacols := h.Datacols
 	frames := []Frame{}
 	nxt := true
 	brk := false
@@ -304,7 +304,7 @@ func BodyFromString(s string, h Header) (Body, error) {
 				symbol := char_vec[symbol_pos]
 				fg_color := NoColor
 				bg_color := NoColor
-				if h.color_mod == ColorModFg {
+				if h.ColorMod == ColorModFg {
 					fg_color_position := (frm*width*datacols*height)+(y*width*datacols)+width+x
 					if fg_color_position >= length {
 						nxt = false
@@ -315,7 +315,7 @@ func BodyFromString(s string, h Header) (Body, error) {
 					if err != nil{
 						return nil, err
 					}
-				}else if h.color_mod == ColorModBg {
+				}else if h.ColorMod == ColorModBg {
 					bg_color_position := (frm*width*datacols*height)+(y*width*datacols)+width+x
 					if bg_color_position >= length {
 						nxt = false
@@ -326,7 +326,7 @@ func BodyFromString(s string, h Header) (Body, error) {
 					if err != nil{
 						return nil, err
 					}
-				}else if h.color_mod == ColorModFull {
+				}else if h.ColorMod == ColorModFull {
 					fg_color_position := (frm*width*datacols*height)+(y*width*datacols)+width+x
 					bg_color_position := (frm*width*datacols*height)+(y*width*datacols)+width*2+x
 					if fg_color_position >= length || bg_color_position >= length {
@@ -341,9 +341,9 @@ func BodyFromString(s string, h Header) (Body, error) {
 					}
 				}
 				if x == 0 {
-					row_fragment.fg_color = fg_color
-					row_fragment.bg_color = bg_color
-				}else if row_fragment.fg_color != fg_color || row_fragment.bg_color != bg_color {
+					row_fragment.FgColor = fg_color
+					row_fragment.BgColor = bg_color
+				}else if row_fragment.FgColor != fg_color || row_fragment.BgColor != bg_color {
 						row = append(row, row_fragment)
 						row_fragment = RowFragment{
 							string(symbol),
@@ -352,9 +352,9 @@ func BodyFromString(s string, h Header) (Body, error) {
 						}
 						continue
 				}
-				row_fragment.text += string(symbol)
+				row_fragment.Text += string(symbol)
 			}
-			if len(row_fragment.text) > 0 {
+			if len(row_fragment.Text) > 0 {
 				row = append(row, row_fragment)
 			}
 			if len(row) < 1 {
@@ -373,8 +373,8 @@ func BodyFromString(s string, h Header) (Body, error) {
 }
 
 type Art struct {
-	header Header
-	body Body
+	Header Header
+	Body Body
 }
 
 func Load(s string) (*Art, error) {
@@ -399,9 +399,9 @@ func Load(s string) (*Art, error) {
 
 func Save(art Art, pretify bool) string {
 	ret := ""
-	ret += art.header.ToString()
+	ret += art.Header.ToString()
 	ret += "\n"
-	ret += art.body.ToString(pretify)
+	ret += art.Body.ToString(pretify)
 	return ret
 }
 
