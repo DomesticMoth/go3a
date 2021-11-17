@@ -21,6 +21,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"os"
+	"bytes"
 )
 
 func remove_comments(s string) string {
@@ -112,11 +114,11 @@ func (header Header) to_string() string {
 		ret += header.audio
 	}
 	if header.title != "" {
-		ret += "\title "
+		ret += "\ntitle "
 		ret += header.title
 	}
 	if header.author != "" {
-		ret += "\author "
+		ret += "\nauthor "
 		ret += header.author
 	}
 	ret += "\n\n"
@@ -206,6 +208,9 @@ func header_from_string(s string) (*Header, error) {
 					s := ""
 					for i, token := range tokens {
 						if i > 0 {
+							if i > 1 {
+								s += " "
+							}
 							s += token
 						}
 					}
@@ -217,6 +222,9 @@ func header_from_string(s string) (*Header, error) {
 					s := ""
 					for i, token := range tokens {
 						if i > 0 {
+							if i > 1 {
+								s += " "
+							}
 							s += token
 						}
 					}
@@ -367,4 +375,54 @@ func body_from_string(s string, h Header) (Body, error) {
 type Art struct {
 	header Header
 	body Body
+}
+
+func load(s string) (*Art, error) {
+	fragments := strings.SplitN(s, "\n\n", 2)
+	if len(fragments) < 2 {
+		return nil, ThereIsNoBody{}
+	}
+	header_string := fragments[0]
+	body_string := fragments[1]
+	header, h_err := header_from_string(header_string)
+	if h_err != nil {
+		return nil, h_err
+	}
+	body, b_err := body_from_string(body_string, *header)
+	if b_err != nil {
+		return nil, b_err
+	}
+	ret := new(Art)
+	*ret = Art{*header, body}
+	return ret, nil
+}
+
+func save(art Art, pretify bool) string {
+	ret := ""
+	ret += art.header.to_string()
+	ret += "\n"
+	ret += art.body.to_string(pretify)
+	return ret
+}
+
+func load_file(path string) (*Art, error) {
+	file, err := os.Open("hello.txt")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(file)
+	text := buf.String()
+	return load(text)
+}
+
+func save_file(art Art, pretify bool, path string) error {
+	file, err := os.OpenFile(path, os.O_WRONLY, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	file.Write([]byte(save(art, pretify)))
+	return nil
 }
