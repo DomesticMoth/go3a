@@ -406,7 +406,7 @@ func Save(art Art, pretify bool) string {
 }
 
 func LoadFile(path string) (*Art, error) {
-	file, err := os.Open("hello.txt")
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
