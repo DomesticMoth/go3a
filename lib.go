@@ -25,6 +25,7 @@ import (
 	"bytes"
 )
 
+
 func remove_comments(s string) string {
 	var r1 = regexp.MustCompile("(?m)^\t.*?(\n|$)")
 	var r2 = regexp.MustCompile("\t.*?(\n|$)")
