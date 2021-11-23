@@ -379,6 +379,7 @@ type Art struct {
 }
 
 func Load(s string) (*Art, error) {
+	s = remove_comments(s)
 	fragments := strings.SplitN(s, "\n\n", 2)
 	if len(fragments) < 2 {
 		return nil, ThereIsNoBody{}
