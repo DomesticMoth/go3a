@@ -7,7 +7,7 @@ This library provides a structural representation of [3a ascii animations format
 ## Usage
 Install  
 ```
-$ go get github.com/DomesticMoth
+$ go get github.com/DomesticMoth/go3a
 ```
 Here's a simple example that parsing a string in 3a format and displaying title, author and body:  
 ```go
